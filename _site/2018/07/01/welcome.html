@@ -1,0 +1,992 @@
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Welcome - Bitscout</title>
+
+<meta name="description" content="If you see this page, that means you have setup your site. enjoy! :ghost: :ghost: :ghost:You may want to config the site or writing a post next. Please feel ...">
+<link rel="canonical" href="http://localhost:4000/2018/07/01/welcome.html"><link rel="alternate" type="application/rss+xml" title="Bitscout" href="/feed.xml"><!-- start favicons snippet, use https://realfavicongenerator.net/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png"><link rel="manifest" href="/assets/site.webmanifest"><link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#fc4d50"><link rel="shortcut icon" href="/assets/favicon.ico">
+
+<meta name="msapplication-TileColor" content="#ffc40d"><meta name="msapplication-config" content="/assets/browserconfig.xml">
+
+<meta name="theme-color" content="#ffffff">
+<!-- end favicons snippet -->
+
+
+<!--
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+-->
+<link rel="stylesheet" href="/assets/css/main.css"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" ><!-- start custom head snippets -->
+
+<!-- end custom head snippets --><script>(function() {
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  };
+
+  window.isOverallScroller = function(node) {
+    return node === document.documentElement || node === document.body || node === window;
+  };
+
+  window.isFormElement = function(node) {
+    var tagName = node.tagName;
+    return tagName === 'INPUT' || tagName === 'SELECT' || tagName === 'TEXTAREA';
+  };
+
+  window.pageLoad = (function () {
+    var loaded = false, cbs = [];
+    window.addEventListener('load', function () {
+      var i;
+      loaded = true;
+      if (cbs.length > 0) {
+        for (i = 0; i < cbs.length; i++) {
+          cbs[i]();
+        }
+      }
+    });
+    return {
+      then: function(cb) {
+        cb && (loaded ? cb() : (cbs.push(cb)));
+      }
+    };
+  })();
+})();
+(function() {
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+})();
+(function() {
+  var Set = (function() {
+    var add = function(item) {
+      var i, data = this._data;
+      for (i = 0; i < data.length; i++) {
+        if (data[i] === item) {
+          return;
+        }
+      }
+      this.size ++;
+      data.push(item);
+      return data;
+    };
+
+    var Set = function(data) {
+      this.size = 0;
+      this._data = [];
+      var i;
+      if (data.length > 0) {
+        for (i = 0; i < data.length; i++) {
+          add.call(this, data[i]);
+        }
+      }
+    };
+    Set.prototype.add = add;
+    Set.prototype.get = function(index) { return this._data[index]; };
+    Set.prototype.has = function(item) {
+      var i, data = this._data;
+      for (i = 0; i < data.length; i++) {
+        if (this.get(i) === item) {
+          return true;
+        }
+      }
+      return false;
+    };
+    Set.prototype.is = function(map) {
+      if (map._data.length !== this._data.length) { return false; }
+      var i, j, flag, tData = this._data, mData = map._data;
+      for (i = 0; i < tData.length; i++) {
+        for (flag = false, j = 0; j < mData.length; j++) {
+          if (tData[i] === mData[j]) {
+            flag = true;
+            break;
+          }
+        }
+        if (!flag) { return false; }
+      }
+      return true;
+    };
+    Set.prototype.values = function() {
+      return this._data;
+    };
+    return Set;
+  })();
+
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    };
+    var end = function(type, url) {
+      var s, q, qi, cbs, i, j, cur, val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j];
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, q, qi, node, i, cur,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  };
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+})();
+</script><script>
+  (function() {
+    var TEXT_VARIABLES = {
+      version: '2.2.5',
+      sources: {
+        font_awesome: 'https://use.fontawesome.com/releases/v5.0.13/css/all.css',
+        jquery: 'https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js',
+        leancloud_js_sdk: '//cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js',
+        chart: 'https://cdn.bootcss.com/Chart.js/2.7.2/Chart.bundle.min.js',
+        gitalk: {
+          js: 'https://cdn.bootcss.com/gitalk/1.2.2/gitalk.min.js',
+          css: 'https://cdn.bootcss.com/gitalk/1.2.2/gitalk.min.css'
+        },
+        valine: 'https://unpkg.com/valine/dist/Valine.min.js',
+        mathjax: 'https://cdn.bootcss.com/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML',
+        mermaid: 'https://cdn.bootcss.com/mermaid/8.0.0-rc.8/mermaid.min.js'
+      },
+      site: {
+        toc: {
+          selectors: 'h1,h2,h3'
+        }
+      },
+      paths: {
+        search_js: '/assets/search.js'
+      }
+    };
+    window.TEXT_VARIABLES = TEXT_VARIABLES;
+  })();
+</script></head>
+  <body>
+    <div class="root" data-is-touch="false">
+      <div class="layout--page js-page-root">
+<div class="page__main js-page-main page__viewport has-aside cell cell--auto">
+
+      <div class="page__main-inner">
+<div class="page__header d-print-none">
+<header class="header"><div class="main">
+      <div class="header__title">
+        <div class="header__brand">
+<svg data-v-423bf9ae="" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 2851.2339814930738 2986" class="iconAbove"><!----><!----><!----><g data-v-423bf9ae="" id="a43edea9-fd29-49cc-9697-c7336e6eb099" fill="#ffffff" transform="matrix(5.714285195279331,0,0,5.714285195279331,1274.1598093981634,2902.1892065586685)"><path d="M8.31 11.59L8.31 11.59L8.31 11.59Q8.31 12.02 8.28 12.34L8.28 12.34L8.28 12.34Q8.26 12.67 8.20 12.95L8.20 12.95L8.20 12.95Q8.15 13.24 8.09 13.44L8.09 13.44L8.09 13.44Q8.03 13.64 7.89 13.81L7.89 13.81L7.89 13.81Q7.76 13.99 7.64 14.09L7.64 14.09L7.64 14.09Q7.51 14.20 7.28 14.28L7.28 14.28L7.28 14.28Q7.05 14.37 6.84 14.41L6.84 14.41L6.84 14.41Q6.63 14.45 6.28 14.48L6.28 14.48L6.28 14.48Q5.93 14.51 5.60 14.51L5.60 14.51L5.60 14.51Q5.28 14.52 4.79 14.52L4.79 14.52L1.13 14.52L1.13 4.33L5.00 4.33L5.00 4.33Q5.78 4.33 6.29 4.41L6.29 4.41L6.29 4.41Q6.79 4.49 7.19 4.70L7.19 4.70L7.19 4.70Q7.58 4.90 7.76 5.28L7.76 5.28L7.76 5.28Q7.94 5.65 7.94 6.23L7.94 6.23L7.95 6.97L7.95 6.97Q7.95 7.44 7.92 7.73L7.92 7.73L7.92 7.73Q7.88 8.03 7.80 8.26L7.80 8.26L7.80 8.26Q7.71 8.50 7.54 8.64L7.54 8.64L7.54 8.64Q7.37 8.78 7.13 8.87L7.13 8.87L7.13 8.87Q6.88 8.96 6.50 9.03L6.50 9.03L6.50 9.03Q6.97 9.08 7.30 9.24L7.30 9.24L7.30 9.24Q7.64 9.39 7.83 9.61L7.83 9.61L7.83 9.61Q8.03 9.83 8.13 10.17L8.13 10.17L8.13 10.17Q8.24 10.50 8.28 10.82L8.28 10.82L8.28 10.82Q8.31 11.14 8.31 11.59ZM6.60 7.76L6.60 6.68L6.60 6.68Q6.60 6.67 6.60 6.64L6.60 6.64L6.60 6.64Q6.60 6.35 6.60 6.23L6.60 6.23L6.60 6.23Q6.60 6.11 6.56 5.94L6.56 5.94L6.56 5.94Q6.52 5.76 6.48 5.71L6.48 5.71L6.48 5.71Q6.45 5.65 6.31 5.56L6.31 5.56L6.31 5.56Q6.18 5.47 6.05 5.45L6.05 5.45L6.05 5.45Q5.92 5.43 5.64 5.40L5.64 5.40L5.64 5.40Q5.37 5.37 5.09 5.37L5.09 5.37L5.09 5.37Q4.82 5.37 4.35 5.37L4.35 5.37L2.51 5.37L2.51 8.64L3.88 8.64L3.88 8.64Q4.78 8.64 5.33 8.59L5.33 8.59L5.33 8.59Q5.89 8.54 6.16 8.41L6.16 8.41L6.16 8.41Q6.43 8.29 6.51 8.14L6.51 8.14L6.51 8.14Q6.60 8.00 6.60 7.76L6.60 7.76ZM6.97 12.17L6.96 11.26L6.96 11.26Q6.95 10.45 6.90 10.23L6.90 10.23L6.90 10.23Q6.80 9.86 6.43 9.72L6.43 9.72L6.43 9.72Q5.96 9.54 4.35 9.54L4.35 9.54L4.35 9.54Q4.24 9.54 4.11 9.54L4.11 9.54L2.51 9.54L2.51 13.49L5.12 13.49L5.12 13.49Q5.91 13.49 6.32 13.35L6.32 13.35L6.32 13.35Q6.72 13.22 6.85 12.95L6.85 12.95L6.85 12.95Q6.98 12.69 6.97 12.17L6.97 12.17ZM11.48 7.02L11.48 14.52L10.14 14.52L10.14 7.02L11.48 7.02ZM10.14 4.12L11.48 4.12L11.48 5.30L10.14 5.30L10.14 4.12ZM16.61 13.57L16.61 13.57L16.58 14.53L16.58 14.53Q16.01 14.62 15.54 14.62L15.54 14.62L15.54 14.62Q15.05 14.62 14.72 14.51L14.72 14.51L14.72 14.51Q14.40 14.40 14.23 14.16L14.23 14.16L14.23 14.16Q14.07 13.92 14.01 13.63L14.01 13.63L14.01 13.63Q13.95 13.34 13.95 12.89L13.95 12.89L13.95 7.79L12.93 7.79L12.93 7.02L13.95 7.02L13.95 4.89L15.29 4.78L15.29 7.02L16.67 7.02L16.67 7.79L15.29 7.79L15.29 12.43L15.29 12.43Q15.29 13.17 15.36 13.39L15.36 13.39L15.36 13.39Q15.43 13.61 15.75 13.61L15.75 13.61L15.75 13.61Q16.06 13.61 16.61 13.57ZM23.79 12.44L23.79 12.44L23.79 12.44Q23.79 13.10 23.65 13.52L23.65 13.52L23.65 13.52Q23.50 13.94 23.17 14.18L23.17 14.18L23.17 14.18Q22.84 14.43 22.36 14.53L22.36 14.53L22.36 14.53Q21.89 14.62 21.16 14.62L21.16 14.62L21.16 14.62Q20.74 14.62 20.48 14.62L20.48 14.62L20.48 14.62Q20.23 14.61 19.89 14.58L19.89 14.58L19.89 14.58Q19.56 14.55 19.36 14.50L19.36 14.50L19.36 14.50Q19.16 14.44 18.93 14.34L18.93 14.34L18.93 14.34Q18.70 14.24 18.57 14.09L18.57 14.09L18.57 14.09Q18.44 13.93 18.33 13.72L18.33 13.72L18.33 13.72Q18.21 13.51 18.16 13.22L18.16 13.22L18.16 13.22Q18.12 12.93 18.12 12.56L18.12 12.56L19.17 12.28L19.17 12.28Q19.24 13.06 19.32 13.27L19.32 13.27L19.32 13.27Q19.44 13.55 19.83 13.62L19.83 13.62L19.83 13.62Q20.13 13.69 21.07 13.69L21.07 13.69L21.07 13.69Q21.64 13.69 21.91 13.63L21.91 13.63L21.91 13.63Q22.19 13.58 22.29 13.44L22.29 13.44L22.29 13.44Q22.56 13.21 22.56 11.90L22.56 11.90L22.56 11.90Q22.56 11.70 22.48 11.56L22.48 11.56L22.48 11.56Q22.39 11.42 22.28 11.35L22.28 11.35L22.28 11.35Q22.16 11.28 21.95 11.23L21.95 11.23L21.95 11.23Q21.75 11.18 21.58 11.16L21.58 11.16L21.58 11.16Q21.41 11.14 21.14 11.12L21.14 11.12L21.14 11.12Q20.86 11.09 20.70 11.07L20.70 11.07L20.70 11.07Q20.20 11.01 19.89 10.96L19.89 10.96L19.89 10.96Q19.57 10.91 19.25 10.81L19.25 10.81L19.25 10.81Q18.93 10.71 18.75 10.55L18.75 10.55L18.75 10.55Q18.57 10.40 18.42 10.17L18.42 10.17L18.42 10.17Q18.27 9.93 18.20 9.59L18.20 9.59L18.20 9.59Q18.14 9.26 18.14 8.79L18.14 8.79L18.14 8.79Q18.14 8.30 18.25 7.96L18.25 7.96L18.25 7.96Q18.35 7.62 18.55 7.39L18.55 7.39L18.55 7.39Q18.74 7.16 19.09 7.04L19.09 7.04L19.09 7.04Q19.43 6.91 19.87 6.86L19.87 6.86L19.87 6.86Q20.30 6.81 20.92 6.81L20.92 6.81L20.92 6.81Q21.31 6.81 21.56 6.82L21.56 6.82L21.56 6.82Q21.81 6.83 22.10 6.87L22.10 6.87L22.10 6.87Q22.40 6.90 22.59 6.97L22.59 6.97L22.59 6.97Q22.77 7.04 22.96 7.16L22.96 7.16L22.96 7.16Q23.15 7.29 23.25 7.47L23.25 7.47L23.25 7.47Q23.35 7.65 23.42 7.91L23.42 7.91L23.42 7.91Q23.48 8.17 23.48 8.50L23.48 8.50L22.57 8.78L22.57 8.78Q22.54 8.52 22.51 8.36L22.51 8.36L22.51 8.36Q22.49 8.21 22.41 8.08L22.41 8.08L22.41 8.08Q22.33 7.95 22.24 7.90L22.24 7.90L22.24 7.90Q22.15 7.84 21.93 7.80L21.93 7.80L21.93 7.80Q21.72 7.76 21.50 7.75L21.50 7.75L21.50 7.75Q21.28 7.75 20.87 7.75L20.87 7.75L20.87 7.75Q20.00 7.75 19.68 7.92L19.68 7.92L19.68 7.92Q19.37 8.09 19.37 8.49L19.37 8.49L19.37 9.19L19.37 9.19Q19.37 9.64 19.64 9.76L19.64 9.76L19.64 9.76Q19.91 9.88 21.09 10.03L21.09 10.03L21.09 10.03Q21.21 10.05 21.27 10.06L21.27 10.06L21.27 10.06Q21.75 10.11 22.02 10.16L22.02 10.16L22.02 10.16Q22.30 10.21 22.61 10.28L22.61 10.28L22.61 10.28Q22.91 10.36 23.07 10.47L23.07 10.47L23.07 10.47Q23.24 10.58 23.40 10.74L23.40 10.74L23.40 10.74Q23.56 10.90 23.63 11.14L23.63 11.14L23.63 11.14Q23.70 11.38 23.74 11.70L23.74 11.70L23.74 11.70Q23.79 12.01 23.79 12.44ZM31.16 9.18L31.16 9.18L30.05 9.37L29.91 8.42L29.91 8.42Q29.85 8.09 29.78 8.00L29.78 8.00L29.78 8.00Q29.60 7.79 28.79 7.77L28.79 7.77L28.79 7.77Q28.60 7.76 28.37 7.76L28.37 7.76L28.37 7.76Q27.44 7.76 27.15 7.86L27.15 7.86L27.15 7.86Q26.84 7.92 26.69 8.48L26.69 8.48L26.69 8.48Q26.55 9.05 26.55 9.87L26.55 9.87L26.56 11.05L26.56 11.05Q26.56 11.30 26.56 11.73L26.56 11.73L26.56 11.73Q26.56 12.29 26.56 12.52L26.56 12.52L26.56 12.52Q26.56 12.75 26.62 13.04L26.62 13.04L26.62 13.04Q26.68 13.33 26.76 13.40L26.76 13.40L26.76 13.40Q26.84 13.47 27.06 13.57L27.06 13.57L27.06 13.57Q27.28 13.67 27.52 13.67L27.52 13.67L27.52 13.67Q27.77 13.68 28.25 13.68L28.25 13.68L28.25 13.68Q28.62 13.68 28.89 13.65L28.89 13.65L28.89 13.65Q29.16 13.62 29.34 13.59L29.34 13.59L29.34 13.59Q29.53 13.55 29.65 13.46L29.65 13.46L29.65 13.46Q29.77 13.36 29.84 13.29L29.84 13.29L29.84 13.29Q29.90 13.21 29.93 13.05L29.93 13.05L29.93 13.05Q29.97 12.89 29.98 12.78L29.98 12.78L29.98 12.78Q29.99 12.66 30.00 12.42L30.00 12.42L30.00 12.42Q30.02 12.19 30.04 12.02L30.04 12.02L31.16 12.22L31.16 12.22Q31.12 12.75 31.07 13.07L31.07 13.07L31.07 13.07Q31.01 13.39 30.90 13.69L30.90 13.69L30.90 13.69Q30.78 13.99 30.59 14.15L30.59 14.15L30.59 14.15Q30.41 14.30 30.10 14.42L30.10 14.42L30.10 14.42Q29.78 14.55 29.36 14.58L29.36 14.58L29.36 14.58Q28.94 14.62 28.31 14.62L28.31 14.62L28.31 14.62Q27.86 14.62 27.50 14.59L27.50 14.59L27.50 14.59Q27.14 14.57 26.84 14.48L26.84 14.48L26.84 14.48Q26.55 14.40 26.33 14.32L26.33 14.32L26.33 14.32Q26.11 14.24 25.95 14.04L25.95 14.04L25.95 14.04Q25.78 13.84 25.67 13.70L25.67 13.70L25.67 13.70Q25.55 13.56 25.48 13.23L25.48 13.23L25.48 13.23Q25.40 12.91 25.36 12.69L25.36 12.69L25.36 12.69Q25.32 12.46 25.30 12.00L25.30 12.00L25.30 12.00Q25.28 11.54 25.28 11.22L25.28 11.22L25.28 11.22Q25.27 10.90 25.27 10.29L25.27 10.29L25.27 10.29Q25.27 9.74 25.29 9.34L25.29 9.34L25.29 9.34Q25.31 8.94 25.38 8.58L25.38 8.58L25.38 8.58Q25.44 8.21 25.54 7.97L25.54 7.97L25.54 7.97Q25.63 7.72 25.80 7.51L25.80 7.51L25.80 7.51Q25.97 7.30 26.19 7.18L26.19 7.18L26.19 7.18Q26.40 7.05 26.72 6.97L26.72 6.97L26.72 6.97Q27.04 6.88 27.42 6.84L27.42 6.84L27.42 6.84Q27.79 6.81 28.30 6.81L28.30 6.81L28.30 6.81Q28.95 6.81 29.39 6.87L29.39 6.87L29.39 6.87Q29.83 6.94 30.17 7.09L30.17 7.09L30.17 7.09Q30.52 7.24 30.71 7.52L30.71 7.52L30.71 7.52Q30.91 7.79 31.02 8.19L31.02 8.19L31.02 8.19Q31.13 8.59 31.16 9.18ZM35.79 13.68L35.79 13.68L35.79 13.68Q36.76 13.66 37.14 13.54L37.14 13.54L37.14 13.54Q37.52 13.41 37.52 13.05L37.52 13.05L37.52 13.05Q37.60 12.07 37.60 10.79L37.60 10.79L37.60 10.79Q37.60 10.36 37.56 9.57L37.56 9.57L37.56 9.57Q37.53 8.78 37.53 8.40L37.53 8.40L37.53 8.40Q37.53 8.29 37.49 8.19L37.49 8.19L37.49 8.19Q37.45 8.09 37.37 8.03L37.37 8.03L37.37 8.03Q37.28 7.96 37.20 7.92L37.20 7.92L37.20 7.92Q37.11 7.87 36.96 7.84L36.96 7.84L36.96 7.84Q36.80 7.81 36.70 7.79L36.70 7.79L36.70 7.79Q36.59 7.77 36.40 7.77L36.40 7.77L36.40 7.77Q36.20 7.76 36.10 7.76L36.10 7.76L36.10 7.76Q35.99 7.76 35.79 7.76L35.79 7.76L35.79 7.76Q35.58 7.76 35.48 7.76L35.48 7.76L35.48 7.76Q35.37 7.76 35.17 7.77L35.17 7.77L35.17 7.77Q34.98 7.77 34.87 7.79L34.87 7.79L34.87 7.79Q34.77 7.81 34.61 7.84L34.61 7.84L34.61 7.84Q34.46 7.87 34.37 7.92L34.37 7.92L34.37 7.92Q34.29 7.96 34.20 8.03L34.20 8.03L34.20 8.03Q34.12 8.09 34.08 8.19L34.08 8.19L34.08 8.19Q34.04 8.29 34.04 8.40L34.04 8.40L34.04 8.40Q34.04 8.78 34.01 9.57L34.01 9.57L34.01 9.57Q33.97 10.36 33.97 10.79L33.97 10.79L33.97 10.79Q33.97 12.07 34.05 13.05L34.05 13.05L34.05 13.05Q34.05 13.41 34.45 13.55L34.45 13.55L34.45 13.55Q34.85 13.68 35.79 13.68ZM35.78 14.62L35.78 14.62L35.78 14.62Q35.02 14.62 34.51 14.56L34.51 14.56L34.51 14.56Q34.01 14.50 33.64 14.29L33.64 14.29L33.64 14.29Q33.28 14.08 33.09 13.85L33.09 13.85L33.09 13.85Q32.89 13.61 32.79 13.10L32.79 13.10L32.79 13.10Q32.68 12.59 32.65 12.09L32.65 12.09L32.65 12.09Q32.63 11.59 32.63 10.71L32.63 10.71L32.63 10.71Q32.63 10.04 32.65 9.60L32.65 9.60L32.65 9.60Q32.66 9.15 32.72 8.73L32.72 8.73L32.72 8.73Q32.79 8.30 32.88 8.04L32.88 8.04L32.88 8.04Q32.97 7.77 33.14 7.54L33.14 7.54L33.14 7.54Q33.32 7.30 33.54 7.18L33.54 7.18L33.54 7.18Q33.76 7.05 34.09 6.96L34.09 6.96L34.09 6.96Q34.43 6.87 34.83 6.84L34.83 6.84L34.83 6.84Q35.23 6.81 35.79 6.81L35.79 6.81L35.79 6.81Q36.34 6.81 36.74 6.84L36.74 6.84L36.74 6.84Q37.14 6.87 37.48 6.96L37.48 6.96L37.48 6.96Q37.82 7.05 38.04 7.18L38.04 7.18L38.04 7.18Q38.25 7.30 38.43 7.54L38.43 7.54L38.43 7.54Q38.60 7.77 38.69 8.04L38.69 8.04L38.69 8.04Q38.79 8.30 38.85 8.73L38.85 8.73L38.85 8.73Q38.91 9.15 38.93 9.60L38.93 9.60L38.93 9.60Q38.94 10.04 38.94 10.71L38.94 10.71L38.94 10.71Q38.94 11.59 38.92 12.09L38.92 12.09L38.92 12.09Q38.90 12.59 38.79 13.10L38.79 13.10L38.79 13.10Q38.68 13.61 38.48 13.85L38.48 13.85L38.48 13.85Q38.29 14.09 37.92 14.29L37.92 14.29L37.92 14.29Q37.56 14.50 37.05 14.56L37.05 14.56L37.05 14.56Q36.54 14.62 35.78 14.62ZM46.76 7.02L46.76 14.53L45.52 14.53L45.40 13.56L45.40 13.56Q45.22 14.10 44.62 14.36L44.62 14.36L44.62 14.36Q44.02 14.62 43.16 14.62L43.16 14.62L43.16 14.62Q42.57 14.62 42.17 14.51L42.17 14.51L42.17 14.51Q41.77 14.39 41.50 14.17L41.50 14.17L41.50 14.17Q41.23 13.95 41.08 13.55L41.08 13.55L41.08 13.55Q40.93 13.15 40.88 12.65L40.88 12.65L40.88 12.65Q40.82 12.15 40.82 11.42L40.82 11.42L40.82 7.02L42.16 7.02L42.16 11.38L42.16 11.38Q42.16 11.53 42.16 11.78L42.16 11.78L42.16 11.78Q42.16 12.04 42.16 12.14L42.16 12.14L42.16 12.14Q42.16 12.50 42.17 12.71L42.17 12.71L42.17 12.71Q42.18 12.91 42.24 13.11L42.24 13.11L42.24 13.11Q42.30 13.31 42.40 13.40L42.40 13.40L42.40 13.40Q42.49 13.49 42.68 13.57L42.68 13.57L42.68 13.57Q42.88 13.64 43.12 13.67L43.12 13.67L43.12 13.67Q43.37 13.69 43.76 13.69L43.76 13.69L43.76 13.69Q44.20 13.69 44.51 13.62L44.51 13.62L44.51 13.62Q44.82 13.56 44.99 13.46L44.99 13.46L44.99 13.46Q45.17 13.36 45.26 13.19L45.26 13.19L45.26 13.19Q45.36 13.02 45.38 12.86L45.38 12.86L45.38 12.86Q45.41 12.69 45.41 12.45L45.41 12.45L45.41 12.45Q45.41 12.37 45.41 12.18L45.41 12.18L45.41 12.18Q45.40 12.00 45.40 11.90L45.40 11.90L45.40 7.02L46.76 7.02ZM51.82 13.57L51.82 13.57L51.80 14.53L51.80 14.53Q51.22 14.62 50.76 14.62L50.76 14.62L50.76 14.62Q50.26 14.62 49.93 14.51L49.93 14.51L49.93 14.51Q49.61 14.40 49.44 14.16L49.44 14.16L49.44 14.16Q49.28 13.92 49.22 13.63L49.22 13.63L49.22 13.63Q49.16 13.34 49.16 12.89L49.16 12.89L49.16 7.79L48.14 7.79L48.14 7.02L49.16 7.02L49.16 4.89L50.50 4.78L50.50 7.02L51.88 7.02L51.88 7.79L50.50 7.79L50.50 12.43L50.50 12.43Q50.50 13.17 50.57 13.39L50.57 13.39L50.57 13.39Q50.64 13.61 50.96 13.61L50.96 13.61L50.96 13.61Q51.28 13.61 51.82 13.57Z"></path></g><!----><g data-v-423bf9ae="" id="280eeff9-46ba-4499-8cec-8fcfa5bfac5d" transform="matrix(5.688909233940972,0,0,5.688909233940972,-29.957362686970782,0.6331645475240748)" stroke="none" fill="#34A1E5"><path d="M314.423 152.992c-13.672-9.617-28.203-15.648-43.188-17.93-15.969-2.43-32.531-.617-49.219 5.391-24.766 8.914-43.531 20.109-57.375 34.227-12.859 13.109-21.141 28.375-25.313 46.68-7.469 32.734-.344 69.609 7.203 108.641 10.063 52.078 20.453 105.938-1.719 156.375a10.622 10.622 0 0 0-.906 4.281c0 5.906 4.781 10.672 10.672 10.672a10.67 10.67 0 0 0 9.766-6.359c.016-.031.016-.063.031-.094s.031-.063.047-.109c24.75-56.469 13.219-116.156 3.047-168.813-7.094-36.766-13.813-71.492-7.344-99.852 4.344-19.032 16.234-46.54 69.125-65.579 25.797-9.289 50.328-5.945 72.906 9.922 28.078 19.734 53.454 59.391 71.454 111.68 16.578 48.156 26.094 104.719 26.078 155.203 0 5.891 4.781 10.672 10.672 10.672s10.672-4.781 10.672-10.672c0-52.75-9.938-111.859-27.25-162.156-24.936-72.407-56.922-106.407-79.359-122.18z"></path><path d="M506.486 222.469c-4.734-33.055-16.828-67.118-34.969-98.493-20-34.578-46.516-63.93-76.688-84.898-24.563-17.07-51.517-28.703-80.11-34.586-31.406-6.461-64.813-5.953-99.266 1.531C158.267 18.429 112.345 38 78.97 64.187c-29.672 23.281-50.547 52.672-62.078 87.359-20.969 63.141-8.844 132.704 1.844 194.063 3.125 17.891 6.063 34.797 7.906 50.203l.016-.016c.625 5.297 5.125 9.406 10.578 9.406 5.891 0 10.672-4.781 10.672-10.672 0-.438-.031-.844-.078-1.266-1.906-15.969-4.906-33.141-8.078-51.328-10.25-58.875-21.891-125.625-2.609-183.672C59.235 91.757 119.048 48.773 219.97 26.875c31.547-6.844 61.969-7.352 90.453-1.492 25.75 5.305 50.048 15.805 72.235 31.211 27.609 19.188 51.953 46.188 70.391 78.063 16.547 28.625 28.031 60.891 32.328 90.836h.016c.734 5.172 5.172 9.156 10.547 9.156 5.891 0 10.656-4.773 10.656-10.664 0-.516-.047-1.024-.11-1.516z"></path><path d="M407.486 113.015c-21.063-25.102-45.094-43.602-71.423-54.984-30.078-13.016-63.25-16.75-98.578-11.109-40.063 6.391-74.063 16.867-101.094 31.117-25.188 13.289-45.203 30.328-59.516 50.656-19.797 28.109-29.328 62.828-29.125 106.125.172 36.828 7.375 75.273 13.734 109.18 7.438 39.719 14.484 77.25 8.109 101.25l.016.016a10.515 10.515 0 0 0-.375 2.734c0 5.875 4.781 10.656 10.672 10.656 4.938 0 9.094-3.375 10.297-7.938l.016.016c7.609-28.672.484-66.672-7.766-110.672-12.655-67.468-26.983-143.914 11.86-199.086 12.359-17.539 29.859-32.367 52.031-44.063 24.969-13.164 56.75-22.898 94.5-28.922 59.094-9.43 109.672 10.328 150.313 58.742 37.266 44.398 55.984 101.274 63.844 131.219 12.125 46.328 12.875 80.844 9.516 90.547a10.817 10.817 0 0 0-.578 3.5c0 5.875 4.766 10.656 10.656 10.656 4.672 0 8.641-3 10.078-7.188h.016c.016-.063.031-.109.047-.156.031-.094.063-.188.078-.281 5.797-17.625 2.047-59.594-9.172-102.484-8.312-31.679-28.203-91.929-68.156-139.531z"></path><path d="M392.377 170.921c-14.344-20.75-30.469-38.086-47.923-51.516-40.313-31.016-85.141-39.602-129.641-24.828-67.344 22.359-106.359 56.508-119.266 104.406-11.219 41.672-1.313 87.266 8.266 131.36 10.938 50.375 21.281 97.969-.938 133.313h.016a10.569 10.569 0 0 0-1.656 5.672c0 5.891 4.781 10.672 10.672 10.672 3.813 0 7.141-2 9.031-5 26.859-42.719 15.094-96.844 3.719-149.188-9.031-41.594-18.375-84.617-8.5-121.282 5.141-19.117 15.078-35.242 30.359-49.281 17.563-16.125 42.797-29.727 75.016-40.422 37.469-12.438 75.484-5.008 109.906 21.492 31.298 24.086 58.532 63.414 76.673 110.743 18.906 49.328 27.141 103.781 23.844 157.484h.016c-.016.219-.047.438-.047.656 0 5.891 4.781 10.672 10.672 10.672 5.672 0 10.297-4.438 10.641-10.016h.016c3.484-56.719-5.234-114.266-25.219-166.43-9.657-25.201-21.657-48.249-35.657-68.507z"></path><path d="M301.438 194.125c-19.203-14.953-41.531-19.234-64.563-12.367-31.656 9.43-49.5 30.227-54.547 63.579-4.234 27.852.813 61.758 6.141 97.633 7.484 50.313 15.969 107.359-1.25 154.719h.016a10.51 10.51 0 0 0-.656 3.641c0 5.891 4.781 10.672 10.672 10.672 4.609 0 8.516-2.938 10.016-7.031 19.078-52.438 10.172-112.313 2.313-165.141-5.094-34.25-9.906-66.609-6.156-91.289 3.781-25.023 15.984-39.32 39.547-46.336 16.609-4.953 31.438-2.086 45.359 8.758 22.375 17.414 41.656 55.688 54.281 107.758 11.376 46.813 16.704 101.531 14.657 150.156h.016c-.016.156-.016.313-.016.453 0 5.891 4.766 10.672 10.656 10.672 5.75 0 10.406-4.531 10.641-10.219h.016c2.141-50.531-3.422-107.438-15.234-156.094-9.736-40.126-28.393-93.455-61.909-119.564z"></path><path d="M317.626 292.188c-8.109-24.391-17.234-42.523-27.109-53.891-13.203-15.172-25.922-16.008-34.266-14.031-19.797 4.695-30.953 19.672-33.141 44.5-1.766 19.781 1.766 44.609 5.859 73.344 6.609 46.516 14.828 104.406.656 156.422h.016c-.25.891-.391 1.828-.391 2.797 0 5.891 4.781 10.672 10.672 10.672 4.906 0 9.047-3.344 10.281-7.875v.016c15.344-56.266 6.766-116.578-.125-165.031-8.031-56.5-11.469-88.734 11.094-94.078 3.813-.906 8.266 1.539 13.234 7.266 15.656 18.008 30.859 62.734 39.656 116.703 8.313 51.063 8.828 98.391 1.25 117.781h.016a10.74 10.74 0 0 0-.734 3.875c0 5.906 4.766 10.672 10.656 10.672 4.531 0 8.391-2.813 9.938-6.797 10.891-27.906 7.109-84.906-.078-128.969-4.343-26.72-10.39-52.095-17.484-73.376z"></path><path d="M282.11 295.5c0-.016-.016-.031-.016-.063-.016-.063-.047-.109-.047-.125-1.406-4.25-5.406-7.328-10.125-7.328-5.891 0-10.672 4.766-10.672 10.672 0 1.156.203 2.281.547 3.344.078.25 8.234 25.234 13.531 62 8.813 60.984 3.156 107.063-3.141 134.984a10.67 10.67 0 0 0-.266 2.344c0 5.891 4.781 10.672 10.656 10.672 5.094 0 9.344-3.563 10.406-8.313.016-.063.031-.109.047-.156 0-.031 0-.063.016-.078 12.094-53.859 8.5-107.484 3.328-143-5.389-37.172-13.404-62.297-14.264-64.953z"></path></g><!----></svg><a title="Remote Forensics for the Modern Malware Hunter
+" href="/">Bitscout</a>
+</div>
+<button class="button button--secondary button--circle search-button js-search-toggle"><i class="fas fa-search"></i></button>
+</div>
+<nav class="navigation">
+        <ul>
+<li class="navigation__item"><a href="/archive.html">Archive</a></li>
+<li class="navigation__item"><a href="/about.html">About</a></li>
+<li><button class="button button--secondary button--circle search-button js-search-toggle"><i class="fas fa-search"></i></button></li>
+</ul>
+      </nav>
+</div>
+  </header>
+</div>
+<div class="page__content"><div class="main"><div class="grid grid--reverse">
+
+              <div class="col-aside d-print-none js-col-aside"><aside class="page__aside js-page-aside"><div class="toc-aside js-toc-root"></div></aside></div>
+
+              <div class="col-main cell cell--auto">
+<!-- start custom main top snippet -->
+
+<!-- end custom main top snippet --><article itemscope itemtype="http://schema.org/Article"><div class="article__header"><header><h1>Welcome</h1></header></div>
+<meta itemprop="headline" content="Welcome">
+<div class="article__info clearfix">
+<ul class="left-col menu"><li>
+              <a class="button button--secondary button--pill button--sm" href="/archive.html?tag=TeXt">TeXt</a>
+            </li></ul>
+<ul class="right-col menu"><li>
+<i class="far fa-calendar-alt"></i> <span>Jul 01, 2018</span>
+            </li></ul>
+</div>
+<meta itemprop="author" content="">
+<meta itemprop="datePublished" content="2018-07-01T00:00:00+08:00">
+    <meta itemprop="keywords" content="TeXt">
+<div class="js-article-content">
+<div class="layout--article">
+<!-- start custom article top snippet -->
+
+<!-- end custom article top snippet --><div class="article__content" itemprop="articleBody">
+<p>If you see this page, that means you have setup your site. enjoy! <img class="emoji" title=":ghost:" alt=":ghost:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f47b.png" height="20" width="20"> <img class="emoji" title=":ghost:" alt=":ghost:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f47b.png" height="20" width="20"> <img class="emoji" title=":ghost:" alt=":ghost:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f47b.png" height="20" width="20"></p>
+
+<p>You may want to <a href="https://tianqi.name/jekyll-TeXt-theme/docs/en/configuration">config the site</a> or <a href="https://tianqi.name/jekyll-TeXt-theme/docs/en/writing-posts">writing a post</a> next. Please feel free to <a href="https://github.com/kitian616/jekyll-TeXt-theme/issues">create an issue</a> or <a href="mailto:kitian616@outlook.com">send me email</a> if you have any questions.</p>
+
+<!--more-->
+
+<hr>
+
+<p>If you like TeXt, don’t forget to give me a star. <img class="emoji" title=":star2:" alt=":star2:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f31f.png" height="20" width="20"></p>
+
+<p><a href="https://github.com/kitian616/jekyll-TeXt-theme/"><img src="https://img.shields.io/github/stars/kitian616/jekyll-TeXt-theme.svg?label=Stars&amp;style=social" alt="Star This Project"></a></p>
+</div>
+<section class="article__sharing d-print-none"></section><div class="d-print-none">
+<footer class="article__footer"><meta itemprop="dateModified" content="2018-07-01T00:00:00+08:00">
+<!-- start custom article footer snippet -->
+
+<!-- end custom article footer snippet --><div class="article__subscribe"><div class="subscribe">
+<i class="fas fa-rss"></i> <a type="application/rss+xml" href="/feed.xml">Subscribe</a>
+</div></div>
+<div class="article__license"><div class="license">
+    <p>This work is licensed under a <a itemprop="license" rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/">Attribution-NonCommercial 4.0 International</a> license.
+      <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/">
+        <img alt="Attribution-NonCommercial 4.0 International" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png">
+      </a>
+    </p>
+  </div></div></footer><div class="article__section-navigator clearfix"><div class="previous">
+<span>PREVIOUS</span><a href="/2018/06/01/header-image.html">Post with Header Image</a>
+</div></div>
+</div>
+
+</div>
+
+<script>(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    $(function() {
+      var $this ,$scroll;
+      var $articleContent = $('.js-article-content');
+      var hasSidebar = $('.js-page-root').hasClass('layout--page--sidebar');
+      var scroll = hasSidebar ? '.js-page-main' : 'html, body';
+      $scroll = $(scroll);
+
+      $articleContent.find('.highlight').each(function() {
+        $this = $(this);
+        $this.attr('data-lang', $this.find('code').attr('data-lang'));
+      });
+      $articleContent.find('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').each(function() {
+        $this = $(this);
+        $this.append($('<a class="anchor d-print-none" aria-hidden="true"></a>').html('<i class="fas fa-anchor"></i>'));
+      });
+      $articleContent.on('click', '.anchor', function() {
+        $scroll.scrollToAnchor('#' + $(this).parent().attr('id'), 400);
+      });
+    });
+  });
+})();
+</script>
+</div>
+<section class="page__comments d-print-none"></section></article><!-- start custom main bottom snippet -->
+
+<!-- end custom main bottom snippet -->
+</div>
+            </div></div></div>
+<div class="page__footer d-print-none">
+<footer class="footer py-4 js-page-footer">
+  <div class="main">
+<div itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+<meta itemprop="url" content="/">
+<div class="footer__author-links">
+<div class="author-links">
+  <ul class="menu menu--nowrap menu--inline"></ul>
+</div>
+</div>
+    </div>
+<div class="site-info mt-2">
+      <div>© Bitscout 2019,
+        Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> &amp; <a title="TeXt is a super customizable Jekyll theme." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.
+      </div>
+    </div>
+  </div>
+</footer>
+</div>
+</div>
+    </div>
+<script>(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    var $body = $('body'), $window = $(window);
+    var $pageRoot = $('.js-page-root'), $pageMain = $('.js-page-main');
+    var activeCount = 0;
+    function modal(options) {
+      var $root = this, visible, onChange, hideWhenWindowScroll = false;
+      var scrollTop;
+      function setOptions(options) {
+        var _options = options || {};
+        visible = _options.initialVisible === undefined ? false : show;
+        onChange = _options.onChange;
+        hideWhenWindowScroll = _options.hideWhenWindowScroll;
+      }
+      function init() {
+        setState(visible);
+      }
+      function setState(isShow) {
+        if (isShow === visible) {
+          return;
+        }
+        visible = isShow;
+        if (visible) {
+          activeCount++;
+          scrollTop = $(window).scrollTop() || $pageMain.scrollTop();
+          $root.addClass('modal--show');
+          $pageMain.scrollTop(scrollTop);
+          activeCount === 1 && ($pageRoot.addClass('show-modal'), $body.addClass('of-hidden'));
+          hideWhenWindowScroll && window.hasEvent('touchstart') && $window.on('scroll', hide);
+          $window.on('keyup', handleKeyup);
+        } else {
+          activeCount > 0 && activeCount--;
+          $root.removeClass('modal--show');
+          $window.scrollTop(scrollTop);
+          activeCount === 0 && ($pageRoot.removeClass('show-modal'), $body.removeClass('of-hidden'));
+          hideWhenWindowScroll && window.hasEvent('touchstart') && $window.off('scroll', hide);
+          $window.off('keyup', handleKeyup);
+        }
+        onChange && onChange(visible);
+      }
+      function show() {
+        setState(true);
+      }
+      function hide() {
+        setState(false);
+      }
+      function handleKeyup(e) {
+        // Char Code: 27  ESC
+        if (e.which ===  27) {
+          hide();
+        }
+      }
+      setOptions(options);
+      init();
+      return {
+        show: show,
+        hide: hide,
+        $el: $root
+      };
+    }
+    $.fn.modal = modal;
+  });
+})();
+</script><div class="modal modal--overflow page__search-modal d-print-none js-page-search-modal">
+<script>
+(function () {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    // search panel
+    var search = (window.search || (window.search = {}));
+    var useDefaultSearchBox = window.useDefaultSearchBox === undefined ?
+      true : window.useDefaultSearchBox ;
+
+    var $searchModal = $('.js-page-search-modal');
+    var $searchToggle = $('.js-search-toggle');
+    var searchModal = $searchModal.modal({ onChange: handleModalChange, hideWhenWindowScroll: true });
+    var modalVisible = false;
+    search.searchModal = searchModal;
+
+    var $searchBox = null;
+    var $searchInput = null;
+    var $searchClear = null;
+
+    function getModalVisible() {
+      return modalVisible;
+    }
+    search.getModalVisible = getModalVisible;
+
+    function handleModalChange(visible) {
+      modalVisible = visible;
+      if (visible) {
+        search.onShow && search.onShow();
+        useDefaultSearchBox && $searchInput[0] && $searchInput[0].focus();
+      } else {
+        search.onShow && search.onHide();
+        useDefaultSearchBox && $searchInput[0] && $searchInput[0].blur();
+        setTimeout(function() {
+          useDefaultSearchBox && ($searchInput.val(''), $searchBox.removeClass('not-empty'));
+          search.clear && search.clear();
+          window.pageAsideAffix && window.pageAsideAffix.refresh();
+        }, 400);
+      }
+    }
+
+    $searchToggle.on('click', function() {
+      modalVisible ? searchModal.hide() : searchModal.show();
+    });
+    // Char Code: 83  S, 191 /
+    $(window).on('keyup', function(e) {
+      if (!modalVisible && !window.isFormElement(e.target || e.srcElement) && (e.which === 83 || e.which === 191)) {
+        modalVisible || searchModal.show();
+      }
+    });
+
+    if (useDefaultSearchBox) {
+      $searchBox = $('.js-search-box');
+      $searchInput = $searchBox.children('input');
+      $searchClear = $searchBox.children('.js-icon-clear');
+      search.getSearchInput = function() {
+        return $searchInput.get(0);
+      };
+      search.getVal = function() {
+        return $searchInput.val();
+      };
+      search.setVal = function(val) {
+        $searchInput.val(val);
+      };
+
+      $searchInput.on('focus', function() {
+        $(this).addClass('focus');
+      });
+      $searchInput.on('blur', function() {
+        $(this).removeClass('focus');
+      });
+      $searchInput.on('input', window.throttle(function() {
+        var val = $(this).val();
+        if (val === '' || typeof val !== 'string') {
+          search.clear && search.clear();
+        } else {
+          $searchBox.addClass('not-empty');
+          search.onInputNotEmpty && search.onInputNotEmpty(val);
+        }
+      }, 400));
+      $searchClear.on('click', function() {
+        $searchInput.val(''); $searchBox.removeClass('not-empty');
+        search.clear && search.clear();
+      });
+    }
+  });
+})();
+</script><div class="search search--dark">
+  <div class="main">
+    <div class="search__header">Search</div>
+    <div class="search-bar">
+      <div class="search-box js-search-box">
+        <div class="search-box__icon-search"><i class="fas fa-search"></i></div>
+        <input type="text">
+        <div class="search-box__icon-clear js-icon-clear">
+          <a><i class="fas fa-times"></i></a>
+        </div>
+      </div>
+      <button class="button button--theme-dark button--pill search__cancel js-search-toggle">
+        Cancel</button>
+    </div>
+    <div class="search-result js-search-result"></div>
+  </div>
+</div>
+<script>var SOURCES = window.TEXT_VARIABLES.sources;
+var PAHTS = window.TEXT_VARIABLES.paths;
+window.Lazyload.js([SOURCES.jquery, PAHTS.search_js], function() {
+  var search = (window.search || (window.search = {}));
+  var searchData = window.TEXT_SEARCH_DATA || {};
+
+  function memorize(f) {
+    var cache = {};
+    return function () {
+      var key = Array.prototype.join.call(arguments, ',');
+      if (key in cache) return cache[key];
+      else return cache[key] = f.apply(this, arguments);
+    };
+  }
+
+  /// search
+  function searchByQuery(query) {
+    var i, j, key, keys, cur, _title, result = {};
+    keys = Object.keys(searchData);
+    for (i = 0; i < keys.length; i++) {
+      key = keys[i];
+      for (j = 0; j < searchData[key].length; j++) {
+        cur = searchData[key][j], _title = cur.title;
+        if ((result[key] === undefined || result[key] && result[key].length < 4 )
+          && _title.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+          if (result[key] === undefined) {
+            result[key] = [];
+          }
+          result[key].push(cur);
+        }
+      }
+    }
+    return result;
+  }
+
+  var renderHeader = memorize(function(header) {
+    return $('<p class="search-result__header">' + header + '</p>');
+  });
+
+  var renderItem = function(index, title, url) {
+    return $('<li class="search-result__item" data-index="' + index + '"><a class="button" href="' + url + '">' + title + '</a></li>');
+  };
+
+  function render(data) {
+    if (!data) { return null; }
+    var $root = $('<ul></ul>'), i, j, key, keys, cur, itemIndex = 0;
+    keys = Object.keys(data);
+    for (i = 0; i < keys.length; i++) {
+      key = keys[i];
+      $root.append(renderHeader(key));
+      for (j = 0; j < data[key].length; j++) {
+        cur = data[key][j];
+        $root.append(renderItem(itemIndex++, cur.title, cur.url));
+      }
+    }
+    return $root;
+  }
+
+  // search box
+  var $result = $('.js-search-result'), $resultItems;
+  var lastActiveIndex, activeIndex;
+
+  function clear() {
+    $result.html(null);
+    $resultItems = $('.search-result__item'); activeIndex = 0;
+  }
+  function onInputNotEmpty(val) {
+    $result.html(render(searchByQuery(val)));
+    $resultItems = $('.search-result__item'); activeIndex = 0;
+    $resultItems.eq(0).addClass('active');
+  }
+
+  search.clear = clear;
+  search.onInputNotEmpty = onInputNotEmpty;
+
+  function updateResultItems() {
+    lastActiveIndex >= 0 && $resultItems.eq(lastActiveIndex).removeClass('active');
+    activeIndex >= 0 && $resultItems.eq(activeIndex).addClass('active');
+  }
+
+  function moveActiveIndex(direction) {
+    var itemsCount = $resultItems ? $resultItems.length : 0;
+    if (itemsCount > 1) {
+      lastActiveIndex = activeIndex;
+      if (direction === 'up') {
+        activeIndex = (activeIndex - 1 + itemsCount) % itemsCount;
+      } else if (direction === 'down') {
+        activeIndex = (activeIndex + 1 + itemsCount) % itemsCount;
+      }
+      updateResultItems();
+    }
+  }
+
+  // Char Code: 13  Enter, 37  ⬅, 38  ⬆, 39  ➡, 40  ⬇
+  $(window).on('keyup', function(e) {
+    var modalVisible = search.getModalVisible && search.getModalVisible();
+    if (modalVisible) {
+      if (e.which === 38) {
+        modalVisible && moveActiveIndex('up');
+      } else if (e.which === 40) {
+        modalVisible && moveActiveIndex('down');
+      } else if (e.which === 13) {
+        modalVisible && $resultItems && activeIndex >= 0 && $resultItems.eq(activeIndex).children('a')[0].click();
+      }
+    }
+  });
+
+  $result.on('mouseover', '.search-result__item > a', function() {
+    var itemIndex = $(this).parent().data('index');
+    itemIndex >= 0 && (lastActiveIndex = activeIndex, activeIndex = itemIndex, updateResultItems());
+  });
+});
+</script>
+</div>
+</div>
+
+
+<script>(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    function scrollToAnchor(anchor, duration, callback) {
+      var $root = this;
+      $root.animate({ scrollTop: $(anchor).position().top }, duration, function() {
+        window.history.replaceState(null, '', window.location.href.split('#')[0] + anchor);
+        callback && callback();
+      });
+    }
+    $.fn.scrollToAnchor = scrollToAnchor;
+  });
+})();
+(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    function affix(options) {
+      var $root = this, $window = $(window), $scrollTarget, $scroll,
+        offsetBottom = 0, scrollTarget = window, scroll = window.document, disabled = false, isOverallScroller = true,
+        rootTop, rootLeft, rootHeight, scrollBottom, rootBottomTop,
+        hasInit = false, curState;
+
+      function setOptions(options) {
+        var _options = options || {};
+        _options.offsetBottom && (offsetBottom = _options.offsetBottom);
+        _options.scrollTarget && (scrollTarget = _options.scrollTarget);
+        _options.scroll && (scroll = _options.scroll);
+        _options.disabled !== undefined && (disabled = _options.disabled);
+        $scrollTarget = $(scrollTarget);
+        isOverallScroller = window.isOverallScroller($scrollTarget[0]);
+        $scroll = $(scroll);
+      }
+      function preCalc() {
+        top();
+        rootHeight = $root.outerHeight();
+        rootTop = $root.offset().top + (isOverallScroller ? 0 :  $scrollTarget.scrollTop());
+        rootLeft = $root.offset().left;
+      }
+      function calc(needPreCalc) {
+        needPreCalc && preCalc();
+        scrollBottom = $scroll.outerHeight() - offsetBottom - rootHeight;
+        rootBottomTop = scrollBottom - rootTop;
+      }
+      function top() {
+        if (curState !== 'top') {
+          $root.removeClass('fixed').css({
+            left: 0,
+            top: 0
+          });
+          curState = 'top';
+        }
+      }
+      function fixed() {
+        if (curState !== 'fixed') {
+          $root.addClass('fixed').css({
+            left: rootLeft + 'px',
+            top: 0
+          });
+          curState = 'fixed';
+        }
+      }
+      function bottom() {
+        if (curState !== 'bottom') {
+          $root.removeClass('fixed').css({
+            left: 0,
+            top: rootBottomTop + 'px'
+          });
+          curState = 'bottom';
+        }
+      }
+      function setState() {
+        var scrollTop = $scrollTarget.scrollTop();
+        if (scrollTop >= rootTop && scrollTop <= scrollBottom) {
+          fixed();
+        } else if (scrollTop < rootTop) {
+          top();
+        } else {
+          bottom();
+        }
+      }
+      function init() {
+        if(!hasInit) {
+          var interval, timeout;
+          calc(true); setState();
+          // run calc every 100 millisecond
+          interval = setInterval(function() {
+            calc();
+          }, 100);
+          timeout = setTimeout(function() {
+            clearInterval(interval);
+          }, 45000);
+          window.pageLoad.then(function() {
+            setTimeout(function() {
+              clearInterval(interval);
+              clearTimeout(timeout);
+            }, 3000);
+          });
+          $scrollTarget.on('scroll', function() {
+            disabled || setState();
+          });
+          $window.on('resize', function() {
+            disabled || (calc(true), setState());
+          });
+          hasInit = true;
+        }
+      }
+
+      setOptions(options);
+      if (!disabled) {
+        init();
+      }
+      $window.on('resize', window.throttle(function() {
+        init();
+      }, 200));
+      return {
+        setOptions: setOptions,
+        refresh: function() {
+          calc(true, { animation: false }); setState();
+        }
+      };
+    }
+    $.fn.affix = affix;
+  });
+})();
+(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    function toc(options) {
+      var $root = this, $window = $(window), $scrollTarget, $scroller, $tocUl = $('<ul class="toc toc--ellipsis"></ul>'), $tocLi, $headings, $activeLast, $activeCur,
+        selectors = 'h1,h2,h3', container = 'body', scrollTarget = window, scroller = 'html, body', disabled = false,
+        headingsPos, scrolling = false, hasRendered = false, hasInit = false;
+
+      function setOptions(options) {
+        var _options = options || {};
+        _options.selectors && (selectors = _options.selectors);
+        _options.container && (container = _options.container);
+        _options.scrollTarget && (scrollTarget = _options.scrollTarget);
+        _options.scroller && (scroller = _options.scroller);
+        _options.disabled !== undefined && (disabled = _options.disabled);
+        $headings = $(container).find(selectors).filter('[id]');
+        $scrollTarget = $(scrollTarget);
+        $scroller = $(scroller);
+      }
+      function calc() {
+        headingsPos = [];
+        $headings.each(function() {
+          headingsPos.push(Math.floor($(this).position().top));
+        });
+      }
+      function setState(element, disabled) {
+        var scrollTop = $scrollTarget.scrollTop(), i;
+        if (disabled || !headingsPos || headingsPos.length < 1) { return; }
+        if (element) {
+          $activeCur = element;
+        } else {
+          for (i = 0; i < headingsPos.length; i++) {
+            if (scrollTop >= headingsPos[i]) {
+              $activeCur = $tocLi.eq(i);
+            } else {
+              $activeCur || ($activeCur = $tocLi.eq(i));
+              break;
+            }
+          }
+        }
+        $activeLast && $activeLast.removeClass('active');
+        ($activeLast = $activeCur).addClass('active');
+      }
+      function render() {
+        if(!hasRendered) {
+          $root.append($tocUl);
+          $headings.each(function() {
+            var $this = $(this);
+            $tocUl.append($('<li></li>').addClass('toc-' + $this.prop('tagName').toLowerCase())
+              .append($('<a></a>').text($this.text()).attr('href', '#' + $this.prop('id'))));
+          });
+          $tocLi = $tocUl.children('li');
+          $tocUl.on('click', 'a', function(e) {
+            e.preventDefault();
+            var $this = $(this);
+            scrolling = true;
+            setState($this.parent());
+            $scroller.scrollToAnchor($this.attr('href'), 400, function() {
+              scrolling = false;
+            });
+          });
+        }
+        hasRendered = true;
+      }
+      function init() {
+        var interval, timeout;
+        if(!hasInit) {
+          render(); calc(); setState(null, scrolling);
+          // run calc every 100 millisecond
+          interval = setInterval(function() {
+            calc();
+          }, 100);
+          timeout = setTimeout(function() {
+            clearInterval(interval);
+          }, 45000);
+          window.pageLoad.then(function() {
+            setTimeout(function() {
+              clearInterval(interval);
+              clearTimeout(timeout);
+            }, 3000);
+          });
+          $scrollTarget.on('scroll', function() {
+            disabled || setState(null, scrolling);
+          });
+          $window.on('resize', window.throttle(function() {
+            if (!disabled) {
+              render(); calc(); setState(null, scrolling);
+            }
+          }, 100));
+        }
+        hasInit = true;
+      }
+
+      setOptions(options);
+      if (!disabled) {
+        init();
+      }
+      $window.on('resize', window.throttle(function() {
+        init();
+      }, 200));
+      return {
+        setOptions: setOptions
+      };
+    }
+    $.fn.toc = toc;
+  });
+})();
+/*(function () {
+
+})();*/
+</script><script>
+  /* toc must before affix, since affix need to konw toc' height. */(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  var TOC_SELECTOR = window.TEXT_VARIABLES.site.toc.selectors;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    var $window = $(window);
+    var $articleContent = $('.js-article-content');
+    var $tocRoot = $('.js-toc-root'), $col2 = $('.js-col-aside');
+    var toc;
+    var tocDisabled = false;
+    var hasSidebar = $('.js-page-root').hasClass('layout--page--sidebar');
+    var hasToc = $articleContent.find(TOC_SELECTOR).length > 0;
+
+    function disabled() {
+      return $col2.css('display') === 'none' || !hasToc;
+    }
+
+    tocDisabled = disabled();
+
+    toc = $tocRoot.toc({
+      selectors: TOC_SELECTOR,
+      container: $articleContent,
+      scrollTarget: hasSidebar ? '.js-page-main' : null,
+      scroller: hasSidebar ? '.js-page-main' : null,
+      disabled: tocDisabled
+    });
+
+    $window.on('resize', window.throttle(function() {
+      tocDisabled = disabled();
+      toc && toc.setOptions({
+        disabled: tocDisabled
+      });
+    }, 100));
+
+  });
+})();
+(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    var $window = $(window), $pageFooter = $('.js-page-footer');
+    var $pageAside = $('.js-page-aside');
+    var affix;
+    var tocDisabled = false;
+    var hasSidebar = $('.js-page-root').hasClass('layout--page--sidebar');
+
+    affix = $pageAside.affix({
+      offsetBottom: $pageFooter.outerHeight(),
+      scrollTarget: hasSidebar ? '.js-page-main' : null,
+      scroller: hasSidebar ? '.js-page-main' : null,
+      scroll: hasSidebar ? $('.js-page-main').children() : null,
+      disabled: tocDisabled
+    });
+
+    $window.on('resize', window.throttle(function() {
+      affix && affix.setOptions({
+        disabled: tocDisabled
+      });
+    }, 100));
+
+    window.pageAsideAffix = affix;
+  });
+})();
+</script>
+    </div>
+    <script>(function () {
+  var $root = document.getElementsByClassName('root')[0];
+  if (window.hasEvent('touchstart')) {
+    $root.dataset.isTouch = true;
+    document.addEventListener('touchstart', function(){}, false);
+  }
+})();
+</script>
+  </body>
+</html>

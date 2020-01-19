@@ -1,0 +1,23 @@
+Vitaly Kamluk:
+  name      : Vitaly Kamluk
+  url       : https://www.kaspersky.com/about/team/vitaly-kamluk
+  avatar    : https://avatars1.githubusercontent.com/u/1012671?s=400&v=4 # url towards a picture
+  bio       : Author of Bitscout
+  email     : # email address
+  facebook  : # "user_name" the last part of your profile url, e.g. https://www.facebook.com/user_name
+  twitter   : vkamluk # "user_name" the last part of your profile url, e.g. https://twitter.com/user_name
+  weibo     : # "user_id"   the last part of your profile url, e.g. https://www.weibo.com/user_id/profile?...
+  googleplus: # "user_id"   the last part of your profile url, e.g. https://plus.google.com/u/0/user_id
+  telegram  : # "user_name" the last part of your profile url, e.g. https://t.me/user_name
+  medium    : # "user_name" the last part of your profile url, e.g. https://medium.com/user_name
+  zhihu     : # "user_name" the last part of your profile url, e.g. https://www.zhihu.com/people/user_name
+  douban    : # "user_name" the last part of your profile url, e.g. https://www.douban.com/people/user_name
+  linkedin  : # "user_name" the last part of your profile url, e.g. https://www.linkedin.com/in/user_name
+  github    : vitaly-kamluk # "user_name" the last part of your profile url, e.g. https://github.com/user_name
+  npm       : # "user_name" the last part of your profile url, e.g. https://www.npmjs.com/~user_name
+
+Nicolas Collery:
+  name      : Nicolas Collery
+  avatars   : https://gsec.hitb.org/sg2018/wp-content/uploads/sites/5/2018/07/collery.jpg
+  twitter   : n_collery
+  bio       : Contributor of ideas and use cases
